@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HealthCheck AI</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f1f5f9; --surface: #ffffff; --border: #e2e8f0;
+      --text: #1e293b; --muted: #64748b; --primary: #2563eb;
+      --primary-hover: #1d4ed8; --primary-light: #eff6ff;
+      --danger: #dc2626; --radius: 14px;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.6;
+    }
+    /* Nav */
+    nav {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-inner {
+      max-width: 760px; margin: 0 auto; padding: 0.8rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { font-weight: 700; font-size: 1.15rem; display: flex; align-items: center; gap: 0.4rem; }
+    .logo span { color: var(--primary); }
+    nav a { color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 500; }
+    nav a:hover { color: var(--primary); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo">🩺 HealthCheck <span>AI</span></div>
+    <div style="display:flex;gap:1.2rem;">
+      <a href="#checker">Checker</a>
+      <a href="#history">History</a>
+    </div>
+  </div>
+</nav>
+
+<style>
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #0f2942 0%, #1e40af 50%, #2563eb 100%);
+    color: #fff; padding: 3rem 1.5rem; text-align: center;
+  }
+  .hero-inner { max-width: 580px; margin: 0 auto; }
+  .pill {
+    display: inline-block; background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2); padding: 0.25rem 0.85rem;
+    border-radius: 20px; font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.04em; margin-bottom: 1rem; text-transform: uppercase;
+  }
+  .hero h1 { font-size: 2rem; font-weight: 700; line-height: 1.25; margin-bottom: 0.6rem; }
+  .hero p { font-size: 0.95rem; opacity: 0.8; }
+
+  /* Main */
+  main { max-width: 760px; margin: -1.5rem auto 0; padding: 0 1.5rem 2rem; position: relative; z-index: 10; }
+
+  /* Card */
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .card-head { display: flex; align-items: flex-start; gap: 0.65rem; margin-bottom: 1rem; }
+  .card-head .icon { font-size: 1.4rem; }
+  .card-head h2 { font-size: 1.05rem; font-weight: 600; }
+  .card-head p { font-size: 0.82rem; color: var(--muted); margin-top: 0.1rem; }
+
+  /* Form */
+  textarea {
+    width: 100%; padding: 0.8rem 1rem; border: 1.5px solid var(--border);
+    border-radius: 10px; font-family: inherit; font-size: 0.93rem;
+    color: var(--text); background: var(--bg); resize: vertical;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+  textarea::placeholder { color: #94a3b8; }
+  .form-row { display: flex; align-items: center; justify-content: space-between; margin-top: 0.65rem; }
+  .charcount { font-size: 0.78rem; color: var(--muted); }
+</style>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="pill">AI-Powered · Educational Only</div>
+    <h1>Understand your symptoms,<br>take the right next step.</h1>
+    <p>Describe how you're feeling and get AI-generated insights on possible conditions and recommended actions.</p>
+  </div>
+</div>
+
+<main>
+  <section id="checker" class="card">
+    <div class="card-head">
+      <div class="icon">💬</div>
+      <div><h2>Symptom Checker</h2><p>Describe your symptoms in detail for a better analysis.</p></div>
+    </div>
+    <form id="symptom-form">
+      <label for="symptoms" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Symptoms</label>
+      <textarea id="symptoms" rows="5"
+        placeholder="e.g. I've had a persistent headache and mild fever for 2 days, along with a sore throat and body aches..."
+        required minlength="3" maxlength="2000"></textarea>
+      <div class="form-row">
+        <span class="charcount"><span id="chars">0</span> / 2000</span>
+        <button type="submit" id="submit-btn">Analyze Symptoms</button>
+      </div>
+    </form>
+  </section>
+
+<style>
+  /* Buttons */
+  button {
+    font-family: inherit; cursor: pointer; border: none; border-radius: 10px;
+    font-size: 0.88rem; font-weight: 600; transition: all 0.2s;
+  }
+  #submit-btn {
+    padding: 0.65rem 1.6rem; background: var(--primary); color: #fff;
+    box-shadow: 0 2px 6px rgba(37,99,235,0.25);
+  }
+  #submit-btn:hover { background: var(--primary-hover); }
+  #submit-btn:disabled { background: #94a3b8; cursor: not-allowed; box-shadow: none; }
+  .btn-sec {
+    padding: 0.45rem 0.9rem; background: var(--primary-light); color: var(--primary);
+    margin-left: auto;
+  }
+  .btn-sec:hover { background: #dbeafe; }
+
+  /* Spinner */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner {
+    display: inline-block; width: 13px; height: 13px;
+    border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
+    border-radius: 50%; animation: spin 0.6s linear infinite;
+    vertical-align: middle; margin-right: 0.3rem;
+  }
+
+  /* Result */
+  .result-card { border-left: 4px solid var(--primary); }
+  .analysis-body { white-space: pre-wrap; font-size: 0.9rem; line-height: 1.75; }
+  .hidden { display: none; }
+
+  /* History */
+  #history-list { list-style: none; }
+  #history-list li {
+    padding: 0.75rem 0.9rem; border: 1px solid var(--border);
+    border-radius: 8px; margin-top: 0.5rem; background: var(--bg);
+  }
+  .hist-sym { font-weight: 500; font-size: 0.88rem; display: block; }
+  .hist-date { font-size: 0.76rem; color: var(--muted); margin-top: 0.15rem; display: block; }
+
+  /* Footer */
+  footer {
+    background: var(--surface); border-top: 1px solid var(--border);
+    padding: 1.25rem; text-align: center; margin-top: 1rem;
+  }
+  footer p { font-size: 0.82rem; color: var(--danger); font-weight: 500; }
+  footer .sub { color: var(--muted); font-weight: 400; margin-top: 0.15rem; }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 1.45rem; }
+    .form-row { flex-direction: column; gap: 0.5rem; align-items: stretch; }
+    #submit-btn { width: 100%; }
+  }
+</style>
+
+  <section id="result" class="card result-card hidden" aria-live="polite">
+    <div class="card-head">
+      <div class="icon">📋</div>
+      <div><h2>Analysis Results</h2><p>Based on the symptoms you described.</p></div>
+    </div>
+    <div id="analysis-content" class="analysis-body"></div>
+  </section>
+
+  <section id="history" class="card">
+    <div class="card-head">
+      <div class="icon">🕐</div>
+      <div><h2>Recent Queries</h2><p>Your past symptom checks.</p></div>
+      <button id="load-history" class="btn-sec" type="button">Load History</button>
+    </div>
+    <ul id="history-list"></ul>
+  </section>
+</main>
+
+<footer>
+  <p>⚠️ This tool provides educational information only — not a substitute for professional medical advice.</p>
+  <p class="sub">Always consult a qualified healthcare provider. In an emergency, call your local emergency services.</p>
+</footer>
+
+<script>
+const API = "http://localhost:8000";
+const form = document.getElementById("symptom-form");
+const input = document.getElementById("symptoms");
+const btn = document.getElementById("submit-btn");
+const result = document.getElementById("result");
+const content = document.getElementById("analysis-content");
+const histBtn = document.getElementById("load-history");
+const histList = document.getElementById("history-list");
+const chars = document.getElementById("chars");
+
+input.addEventListener("input", () => { chars.textContent = input.value.length; });
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const symptoms = input.value.trim();
+  if (!symptoms) return;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Analyzing...';
+  result.classList.add("hidden");
+  try {
+    const res = await fetch(API + "/api/check", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ symptoms }),
+    });
+    if (!res.ok) throw new Error("Server error: " + res.status);
+    const data = await res.json();
+    content.textContent = data.analysis;
+    result.classList.remove("hidden");
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch (err) {
+    content.textContent = "Error: " + err.message;
+    result.classList.remove("hidden");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Analyze Symptoms";
+  }
+});
+
+histBtn.addEventListener("click", async () => {
+  try {
+    const res = await fetch(API + "/api/history");
+    const data = await res.json();
+    histList.innerHTML = "";
+    if (!data.length) { histList.innerHTML = "<li>No queries yet.</li>"; return; }
+    data.forEach((item) => {
+      const li = document.createElement("li");
+      const d = new Date(item.created_at).toLocaleString();
+      const safe = document.createElement("span");
+      safe.textContent = item.symptoms;
+      li.innerHTML = '<span class="hist-sym">' + safe.innerHTML + '</span><span class="hist-date">' + d + '</span>';
+      histList.appendChild(li);
+    });
+  } catch { histList.innerHTML = "<li>Failed to load history.</li>"; }
+});
+</script>
+</body>
+</html>
